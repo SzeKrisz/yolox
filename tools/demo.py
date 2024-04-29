@@ -207,6 +207,7 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
 
 
 def imageflow_demo(predictor, vis_folder, current_time, args):
+    frame_index = 0
     cap = cv2.VideoCapture(args.path if args.demo == "video" else args.camid)
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
@@ -228,9 +229,28 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         ret_val, frame = cap.read()
         if ret_val:
             outputs, img_info = predictor.inference(frame)
-            result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            #result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            result_frame = frame
             if args.save_result:
                 vid_writer.write(result_frame)
+
+                ## FOR SAVING THE BOUNDING BOXES
+                if outputs[0] is not None:
+                    bboxes = outputs[0][:, 0:4] 
+                    #print(bboxes)
+                    bboxes /= img_info["ratio"]
+                    #print(bboxes)
+                    for box in bboxes:
+                        x1 = int(box[0])
+                        x2 = int(box[2])
+                        y1 = int(box[1])
+                        y2 = int(box[3])
+                        cropped_image = frame[y1:y2, x1:x2]
+                        #print(str(x1) + " " + str(x2))
+                        #print(str(y1) + " " + str(y2))
+                        cv2.imwrite(save_folder + '/' + str(frame_index) + '.png', cropped_image)
+                        frame_index += 1
+
             else:
                 cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
                 cv2.imshow("yolox", result_frame)

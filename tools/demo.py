@@ -6,6 +6,7 @@ import argparse
 import os
 import time
 from loguru import logger
+import shutil
 
 import cv2
 
@@ -257,6 +258,10 @@ def main(cfg):
     exp = get_exp(cfg.exp_file)
 
     exp.output_dir = cfg.output_dir
+    if os.path.isdir(cfg.output_dir):
+        shutil.rmtree(cfg.output_dir)
+    else:
+        os.makedirs(cfg.output_dir, exist_ok=True)
 
     """ file_name = os.path.join(exp.output_dir, cfg.experiment_name)
     os.makedirs(file_name, exist_ok=True) """

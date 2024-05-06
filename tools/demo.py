@@ -260,6 +260,7 @@ def main(cfg):
     exp.output_dir = cfg.output_dir
     if os.path.isdir(cfg.output_dir):
         shutil.rmtree(cfg.output_dir)
+        os.makedirs(cfg.output_dir, exist_ok=True)
     else:
         os.makedirs(cfg.output_dir, exist_ok=True)
 

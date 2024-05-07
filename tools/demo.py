@@ -240,7 +240,8 @@ def imageflow_demo(predictor, vis_folder, current_time, cfg):
                         cropped_image = frame[y1:y2, x1:x2]
                         #print(str(x1) + " " + str(x2))
                         #print(str(y1) + " " + str(y2))
-                        cv2.imwrite(vis_folder + '/' + str(frame_index) + '.png', cropped_image)
+                        if cropped_image.shape[0] != 0 and cropped_image.shape[1] != 0:
+                            cv2.imwrite(vis_folder + '/' + str(frame_index) + '.png', cropped_image)
                         frame_index += 1
 
             else:

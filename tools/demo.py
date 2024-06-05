@@ -200,6 +200,7 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
 
 def imageflow_demo(predictor, vis_folder, current_time, cfg):
     frame_index = 0
+    bbox_index = 0
     cap = cv2.VideoCapture(cfg.input_dir if cfg.input_type == "video" else cfg.camid)
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
@@ -241,9 +242,10 @@ def imageflow_demo(predictor, vis_folder, current_time, cfg):
                         #print(str(x1) + " " + str(x2))
                         #print(str(y1) + " " + str(y2))
                         if cropped_image.shape[0] != 0 and cropped_image.shape[1] != 0:
-                            image_name = str(frame_index) + '_' + str(x1) + '_' + str(y1) + '_' + str(x2-x1) + '_' + str(y2-y1)
+                            image_name = str(frame_index) + '_' + str(x1) + '_' + str(y1) + '_' + str(x2-x1) + '_' + str(y2-y1) + '_' + str(bbox_index)
                             cv2.imwrite(vis_folder + '/' + image_name + '.png', cropped_image)
-                        frame_index += 1
+                            bbox_index += 1
+                frame_index += 1
 
             else:
                 cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
